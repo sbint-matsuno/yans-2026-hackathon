@@ -178,6 +178,12 @@ def main() -> None:
         default="cpu",
         help="Device for the embedding model (default: cpu; MPS can hit size limits on long batches).",
     )
+    parser.add_argument(
+        "--model",
+        type=str,
+        default=MODEL_NAME,
+        help=f"Sentence-transformers model name (default: {MODEL_NAME}).",
+    )
     args = parser.parse_args()
 
     print(f"Loading chunks from {args.chunks} ...")
@@ -185,8 +191,8 @@ def main() -> None:
     n_chunks = sum(len(v) for v in chunks.values())
     print(f"  Loaded {n_chunks} chunks across {len(chunks)} papers.")
 
-    print(f"Loading model: {MODEL_NAME} (device={args.device}) ...")
-    model = SentenceTransformer(MODEL_NAME, device=args.device)
+    print(f"Loading model: {args.model} (device={args.device}) ...")
+    model = SentenceTransformer(args.model, device=args.device)
     model.max_seq_length = MAX_SEQ_LENGTH
 
     print("Embedding chunks ...")
